@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Product;
-use App\Form\SearchType;
 use Algolia\AlgoliaSearch\SearchClient;
 use Algolia\SearchBundle\SearchService;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,37 +36,27 @@ class HomeController extends AbstractController
      */
     public function search(Request $request, SearchService $searchService): Response
     {
-        $results = [];
-        $form = $this->createForm(SearchType::class);
+        $q = $request->query->get('q');
         $page = $request->query->get('page', 0);
-        $form->handleRequest($request);
-        $post = false;
+        $min = $request->query->get('min', 0);
+        $max = $request->query->get('max', 0);
+        $isEnabled=  $request->query->getInt('isEnabled', 0);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $q = $form->get('q')->getData();
+        $filters = "isEnabled = {$isEnabled}";
+       
+        ($min > 0 && $max > $min) ? $filters .= " AND (price > {$min})": null;
+        ($max > 0 && $min < $max) ? $filters .= " AND (price < {$max})" : null;
 
-            $min = $form->get('min')->getData();
-            $max = $form->get('max')->getData();
-            $isEnabled =  $form->get('isEnabled')->getData() ? 1 : 0;
-
-            $filters = "isEnabled = {$isEnabled}";
-
-            $min > 0 ? $filters .= " AND (price > {$min})" : null;
-            $max > 0 ? $filters .= " AND (price < {$max})" : null;
-            $post = true;
-            $results = $searchService->rawSearch(Product::class, $q, [
-                'query' => $q,
-                'page' => $page,
-                'hitsPerPage' => 10,
-                'attributesToRetrieve' => ['name', 'description', 'price', 'isEnabled'],
-                'filters' => $filters,
-            ]);
-        }
+        $results = $searchService->rawSearch(Product::class, $q, [
+            'query' => $q,
+            'page' => $page,
+            'hitsPerPage' => 10,
+            'attributesToRetrieve' => ['name', 'description', 'price', 'isEnabled'],
+            'filters' => $filters, 
+        ]);
 
         return $this->render('home/search.html.twig', [
             'results' => $results,
-            'form' => $form->createView(),
-            'post' => $post,
         ]);
     }
 
