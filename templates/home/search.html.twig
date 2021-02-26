@@ -1,21 +1,21 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Search Results
+    Search Results
 {% endblock %}
 
 {% block body %}
 
-	<div class="container mt-4">
-		<div class="search-form mb-3">
-			<form class="row gx-3 gy-2 align-items-center">
-				<div class="col-sm-3">
-					<label class="visually-hidden" for="specificSizeInputGroupUsername">Search</label>
-					<div class="input-group">
-						<input type="text" class="form-control" value="{{ app.request.query.get('q', '') }}"
+    <div class="container mt-4">
+        <div class="search-form mb-3">
+            <form class="row gx-3 gy-2 align-items-center">
+                <div class="col-sm-3">
+                    <label class="visually-hidden" for="specificSizeInputGroupUsername">Search</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="{{ app.request.query.get('q', '') }}"
                          id="specificSizeInputGroupUsername" placeholder="Search ..." name="q" required>
-					</div>
-				</div>
+                    </div>
+                </div>
 
                 <div class="col-2">
                     <div class="input-group">
@@ -37,39 +37,37 @@
                     </div>
                 </div>
 
-				<div class="col-auto">
-					<button type="submit" class="btn btn-primary">Search</button>
-				</div>
-			</form>
-		</div>
-		<div class="card">
-			<div class="card-header">
-				<h3 class="card-title">
-					{{ results.nbHits }}
-					Results for "
-					{{ results.query }}
-					"
-				</h3>
-			</div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    {{ results.nbHits }}
+                    Results for "{{ results.query }}"
+                </h3>
+            </div>
 
-			<div class="card-body">
-				{% for hit in results.hits %}
-					<div class="border-bottom">
-						<strong>
-							{{ hit._highlightResult.name.value|raw }}
-							--
-							<b>
-								{{ hit.price }}
-								$</b>
-						</strong>
-						<p>
-							{{ hit._highlightResult.description.value|raw }}
-						</p>
-					</div>
+            <div class="card-body">
+                {% for hit in results.hits %}
+                    <div class="border-bottom">
+                        <strong>
+                            {{ hit._highlightResult.name.value|raw }}
+                            --
+                            <b>
+                                {{ hit.price }}
+                                $</b>
+                        </strong>
+                        <p>
+                            {{ hit._highlightResult.description.value|raw }}
+                        </p>
+                    </div>
                 {% else %}
                     <h1> No records found! </h1>
-				{% endfor %}
-			</div>
+                {% endfor %}
+            </div>
 
             <div class="card-footer">
                 {% if app.request.query.get('page', 0) > 0 %}
@@ -94,6 +92,6 @@
                 {% endif %}
                 
             </div>
-		</div>
-	</div>
+        </div>
+    </div>
 {% endblock %}
