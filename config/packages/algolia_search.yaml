@@ -1,0 +1,16 @@
+# All available configuration can be found here:
+# https://www.algolia.com/doc/api-client/symfony/configuration/
+algolia_search:
+    prefix: '%env(APP_ENV)%_'
+    nbResults: 8
+    doctrineSubscribedEvents: []
+    settingsDirectory: app/search-settings/
+    indices:
+        - name: products
+          class: App\Entity\Product
+          enable_serializer_groups: true
+        - name: comments
+          class: App\Entity\Comment
+          enable_serializer_groups: true
+
+
