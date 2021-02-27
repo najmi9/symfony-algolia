@@ -5,6 +5,9 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     search_only_key: '%env(ALGOLIA_SEARCH_ONLY_KEY)%'
+    algolia_id: '%env(ALGOLIA_APP_ID)%'
+    algolia_places_key: '%env(ALGOLIA_PLACES_KEY)%'
+    algolia_places_id: '%env(ALGOLIA_PLACES_ID)%'
 services:
     # default configuration for services in *this* file
     _defaults:

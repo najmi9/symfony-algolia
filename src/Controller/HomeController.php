@@ -27,7 +27,7 @@ class HomeController extends AbstractController
     /**
      * Search Method
      *
-     * @Route("/search", name="search")
+     * @Route("/server/search", name="server_search")
      *
      * @param Request $request
      * @param SearchService $searchService
@@ -61,6 +61,14 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/client/search", name="client_search")
+     */
+    public function clinetSearch(): Response
+    {
+        return $this->render('home/client_search.html.twig');
+    }
+
+    /**
      * Generate a new search only key for client side.
      * 
      * @Route("/key", name="key", methods={"GET"})
@@ -68,6 +76,8 @@ class HomeController extends AbstractController
     public function key(): JsonResponse
     {
         $searchOnlyAPIKey = $this->getParameter('search_only_key');
+        $id = $this->getParameter('algolia_id');
+
         $validUntil = time() + 3600;
 
         $searchKey = SearchClient::generateSecuredApiKey(
@@ -77,6 +87,9 @@ class HomeController extends AbstractController
             ]
         );
 
-        return $this->json(['key' => $searchKey]);
+        return $this->json([
+            'key' => $searchKey,
+            'id' => $id
+        ]);
     }
 }
